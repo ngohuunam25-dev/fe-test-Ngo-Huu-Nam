@@ -240,6 +240,14 @@ const TaskPage: React.FC = () => {
     selectedRowKeys,
     onChange: (keys: React.Key[]) => setSelectedRowKeys(keys),
   };
+
+  // Handle table changes (sorting, filtering, pagination)
+  const handleTableChange = (_pagination: any, _filters: any, sorter: any) => {
+    if (sorter.field) {
+      onSetSort(sorter.field);
+    }
+  };
+
   console.log('pagination', pagination);
 
   return (
@@ -420,6 +428,7 @@ const TaskPage: React.FC = () => {
         columns={columns}
         dataSource={paginatedTasks.map(task => ({ ...task, key: task.id }))}
         rowSelection={rowSelection}
+        onChange={handleTableChange}
         pagination={{
           pageSize: pagination.pageSize,
           current: pagination.currentPage,
