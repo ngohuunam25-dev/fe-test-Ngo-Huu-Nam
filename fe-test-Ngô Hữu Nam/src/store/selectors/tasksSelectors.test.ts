@@ -287,3 +287,199 @@ describe('selectFilteredTasks Selector', () => {
     expect(filtered[0].id).toBe('2');
   });
 });
+
+// Test selectTaskStats
+describe('selectTaskStats Selector', () => {
+  let store: ReturnType<typeof configureStore>;
+
+  const selectTaskStats = (state: { tasks: TaskSliceState }) => {
+    const tasksState = selectTasksState(state);
+    const tasks = tasksState.tasks;
+
+    const stats = {
+      total: tasks.length,
+      todo: 0,
+      in_progress: 0,
+      done: 0,
+    };
+
+    tasks.forEach(task => {
+      if (task.status === 'todo') stats.todo++;
+      else if (task.status === 'in_progress') stats.in_progress++;
+      else if (task.status === 'done') stats.done++;
+    });
+
+    return stats;
+  };
+
+  const mockTasks: Task[] = [
+    {
+      id: '1',
+      title: 'Task 1',
+      status: 'todo',
+      priority: 'high',
+      createdAt: '2026-05-01',
+    },
+    {
+      id: '2',
+      title: 'Task 2',
+      status: 'todo',
+      priority: 'medium',
+      createdAt: '2026-05-02',
+    },
+    {
+      id: '3',
+      title: 'Task 3',
+      status: 'in_progress',
+      priority: 'low',
+      createdAt: '2026-05-03',
+    },
+    {
+      id: '4',
+      title: 'Task 4',
+      status: 'done',
+      priority: 'high',
+      createdAt: '2026-05-04',
+    },
+  ];
+
+  beforeEach(() => {
+    store = configureStore({
+      reducer: {
+        tasks: taskReducer,
+      },
+      preloadedState: {
+        tasks: {
+          tasks: mockTasks,
+          filters: {},
+          pagination: {
+            currentPage: 1,
+            pageSize: 10,
+            total: mockTasks.length,
+          },
+        },
+      },
+    });
+  });
+
+  it('should calculate correct task statistics', () => {
+    const state = store.getState();
+    const stats = selectTaskStats(state as any);
+
+    expect(stats.total).toBe(4);
+    expect(stats.todo).toBe(2);
+    expect(stats.in_progress).toBe(1);
+    expect(stats.done).toBe(1);
+  });
+});
+
+// Test selectRecentTasks
+describe('selectRecentTasks Selector', () => {
+  let store: ReturnType<typeof configureStore>;
+
+  const selectRecentTasks = (state: { tasks: TaskSliceState }) => {
+    const tasksState = selectTasksState(state);
+    const tasks = tasksState.tasks;
+
+    return [...tasks]
+      .sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      )
+      .slice(0, 5);
+  };
+
+  const mockTasks: Task[] = [
+    {
+      id: '1',
+      title: 'Oldest Task',
+      status: 'todo',
+      priority: 'high',
+      createdAt: '2026-05-01',
+    },
+    {
+      id: '2',
+      title: 'Task 2',
+      status: 'todo',
+      priority: 'medium',
+      createdAt: '2026-05-02',
+    },
+    {
+      id: '3',
+      title: 'Task 3',
+      status: 'in_progress',
+      priority: 'low',
+      createdAt: '2026-05-03',
+    },
+    {
+      id: '4',
+      title: 'Task 4',
+      status: 'done',
+      priority: 'high',
+      createdAt: '2026-05-04',
+    },
+    {
+      id: '5',
+      title: 'Task 5',
+      status: 'todo',
+      priority: 'high',
+      createdAt: '2026-05-05',
+    },
+    {
+      id: '6',
+      title: 'Task 6',
+      status: 'done',
+      priority: 'medium',
+      createdAt: '2026-05-06',
+    },
+    {
+      id: '7',
+      title: 'Newest Task',
+      status: 'todo',
+      priority: 'low',
+      createdAt: '2026-05-07',
+    },
+  ];
+
+  beforeEach(() => {
+    store = configureStore({
+      reducer: {
+        tasks: taskReducer,
+      },
+      preloadedState: {
+        tasks: {
+          tasks: mockTasks,
+          filters: {},
+          pagination: {
+            currentPage: 1,
+            pageSize: 10,
+            total: mockTasks.length,
+          },
+        },
+      },
+    });
+  });
+
+  it('should return 5 most recent tasks', () => {
+    const state = store.getState();
+    const recent = selectRecentTasks(state as any);
+
+    expect(recent).toHaveLength(5);
+    expect(recent[0].id).toBe('7'); // Newest
+    expect(recent[1].id).toBe('6');
+    expect(recent[2].id).toBe('5');
+    expect(recent[3].id).toBe('4');
+    expect(recent[4].id).toBe('3');
+  });
+
+  it('should sort by createdAt descending', () => {
+    const state = store.getState();
+    const recent = selectRecentTasks(state as any);
+
+    for (let i = 0; i < recent.length - 1; i++) {
+      const current = new Date(recent[i].createdAt).getTime();
+      const next = new Date(recent[i + 1].createdAt).getTime();
+      expect(current).toBeGreaterThanOrEqual(next);
+    }
+  });
+});
