@@ -231,19 +231,21 @@ Follow these steps to get started with the project:
 ## 📸 Screenshots & Demo
 
 ### Dashboard
-![Dashboard Screenshot](./docs/screenshots/dashboard.png)
+
 *Dashboard showing task statistics, progress visualization, and recent tasks*
 
 ### Task Management
-![Task List Screenshot](./docs/screenshots/task-list.png)
+<img width="1893" height="886" alt="image" src="https://github.com/user-attachments/assets/ac7efb86-9c54-4696-8195-0291856c6348" />
+
 *Task table with sorting, filtering, and pagination*
 
 ### Task Creation/Edit
-![Task Modal Screenshot](./docs/screenshots/task-modal.png)
+
 *Modal form for creating and editing tasks with validation*
 
 ### Filters in Action
-![Filters Screenshot](./docs/screenshots/filters.png)
+<img width="1896" height="904" alt="image" src="https://github.com/user-attachments/assets/7639c826-d134-4051-a803-bc3e86e544ea" />
+
 *Search and filter functionality with real-time updates*
 
 > **Note**: Screenshots can be added to the `docs/screenshots/` directory. GIF demos showing interaction flows are highly recommended.
