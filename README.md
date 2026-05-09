@@ -250,7 +250,7 @@ Follow these steps to get started with the project:
 
 ## 🎥 Demo Video
 
-<video controls src="Vite + React - Google Chrome 2026-05-10 05-37-46.mp4" title="Task Management System Demo" width="100%"></video>
+![Task Management Demo](./public/ezgif-4d601569573734dd.gif)
 
 *Full application demo showing all features in action*
 
