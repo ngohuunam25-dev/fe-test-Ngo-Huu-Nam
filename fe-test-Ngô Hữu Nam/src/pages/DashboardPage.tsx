@@ -7,34 +7,15 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import { Card, Col, Progress, Row, Space, Statistic, Tag, theme } from 'antd';
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useTasksSelectors } from '../store/selectors/tasksSelectors';
 import { Task } from '../types/task';
 
 const DashboardPage: React.FC = () => {
   const { token } = theme.useToken();
-  const { allTasks } = useTasksSelectors();
-  // Calculate statistics
-  const stats = useMemo(() => {
-    const total = allTasks.length;
-    const todo = allTasks.filter(t => t.status === 'todo').length;
-    const inProgress = allTasks.filter(t => t.status === 'in_progress').length;
-    const done = allTasks.filter(t => t.status === 'done').length;
+  const { stats, recentTasks } = useTasksSelectors();
 
-    return { total, todo, inProgress, done };
-  }, []);
-
-  // Get 5 most recently created tasks (sorted by createdAt descending)
-  const recentTasks = useMemo(() => {
-    return [...allTasks]
-      .sort(
-        (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      )
-      .slice(0, 5);
-  }, [allTasks]);
-
-  // Calculate completion percentage
+  // All data now comes from Redux selectors for optimal performance and consistency
   const completionPercent = Math.round((stats.done / stats.total) * 100);
 
   const statusLabelMap: Record<string, string> = {

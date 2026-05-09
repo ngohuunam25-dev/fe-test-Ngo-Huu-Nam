@@ -108,6 +108,16 @@ const selectTaskStats = createSelector([selectAllTasks], tasks => {
   return stats;
 });
 
+// Recent tasks - 5 most recently created
+const selectRecentTasks = createSelector([selectAllTasks], tasks => {
+  return [...tasks]
+    .sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    )
+    .slice(0, 5);
+});
+
 export const useTasksSelectors = () => {
   const allTasks = useAppSelector(selectAllTasks);
   const filteredTasks = useAppSelector(selectFilteredTasks);
@@ -115,6 +125,7 @@ export const useTasksSelectors = () => {
   const paginatedTasks = useAppSelector(selectPaginatedTasks);
   const stats = useAppSelector(selectTaskStats);
   const pagination = useAppSelector(selectPagination);
+  const recentTasks = useAppSelector(selectRecentTasks);
 
   return {
     allTasks,
@@ -123,5 +134,6 @@ export const useTasksSelectors = () => {
     filters,
     pagination,
     stats,
+    recentTasks,
   };
 };
